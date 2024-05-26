@@ -89,7 +89,13 @@ def main():
     print('Dobrze: ' + str(dobrze_o) + '/15 - ' + str(dobrze_o/15 * 100) + '%')
 
     for i in dobre_piatki:
-        if i == 5:
+        if i == 2:
+            punkty += 5
+        elif i == 3:
+            punkty += 10
+        elif i == 4:
+            punkty += 20
+        elif i == 5:
             punkty += 40
 
     print('Punkty: ' + str(punkty))
