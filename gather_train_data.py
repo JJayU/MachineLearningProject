@@ -15,7 +15,7 @@ import pandas
 # --------------------------------------------------------------------------------------------
 # Step 0 - Prepare list of seasons
 seasons = []
-for i in range(12, 23):
+for i in range(0, 23):
     seasons.append('20' + str(i).zfill(2) + '-' + str(i + 1).zfill(2))
 
 # --------------------------------------------------------------------------------------------
@@ -23,23 +23,23 @@ for i in range(12, 23):
 
 # --------------------------------------------------------------------------------------------
 # Step 1 - Download player stats for all seasons
-for i in seasons:
-    rookies = leaguedashplayerstats.LeagueDashPlayerStats(
-        season=i,
-        player_experience_nullable='Rookie').get_data_frames()[0]
-
-    sophomores = leaguedashplayerstats.LeagueDashPlayerStats(
-        season=i,
-        player_experience_nullable='Sophomore').get_data_frames()[0]
-
-    veterans = leaguedashplayerstats.LeagueDashPlayerStats(
-        season=i,
-        player_experience_nullable='Veteran').get_data_frames()[0]
-
-    others = pandas.concat([sophomores, veterans])
-
-    rookies.to_csv('rookies' + i + '.csv')
-    others.to_csv('others' + i + '.csv')
+# for i in seasoens:
+#     rookies = leaguedashplayerstats.LeagueDashPlayerStats(
+#         season=i,
+#         player_experience_nullable='Rookie').get_data_frames()[0]
+#
+#     sophomores = leaguedashplayerstats.LeagueDashPlayerStats(
+#         season=i,
+#         player_experience_nullable='Sophomore').get_data_frames()[0]
+#
+#     veterans = leaguedashplayerstats.LeagueDashPlayerStats(
+#         season=i,
+#         player_experience_nullable='Veteran').get_data_frames()[0]
+#
+#     others = pandas.concat([sophomores, veterans])
+#
+#     rookies.to_csv('rookies' + i + '.csv')
+#     others.to_csv('others' + i + '.csv')
 
 # --------------------------------------------------------------------------------------------
 
@@ -114,14 +114,14 @@ for i in seasons:
 # --------------------------------------------------------------------------------------------
 # Step 3 - Merge all seasons into one file
 
-rookies = pandas.DataFrame()
-others = pandas.DataFrame()
-
-for i in seasons:
-    rookies = pandas.concat([rookies, pandas.read_csv('rookies_w_awards' + i + '.csv')])
-    others = pandas.concat([others, pandas.read_csv('others_w_awards' + i + '.csv')])
-
-rookies.to_csv('rookies_all.csv')
-others.to_csv('others_all.csv')
+# rookies = pandas.DataFrame()
+# others = pandas.DataFrame()
+#
+# for i in seasons:
+#     rookies = pandas.concat([rookies, pandas.read_csv('rookies_w_awards' + i + '.csv')])
+#     others = pandas.concat([others, pandas.read_csv('others_w_awards' + i + '.csv')])
+#
+# rookies.to_csv('rookies_all.csv')
+# others.to_csv('others_all.csv')
 
 # --------------------------------------------------------------------------------------------
