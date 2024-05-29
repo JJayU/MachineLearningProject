@@ -2,8 +2,7 @@ import pandas
 import joblib
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.neighbors import KNeighborsClassifier
-from sklearn.ensemble import VotingClassifier
+from sklearn.ensemble import VotingClassifier, GradientBoostingClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 
@@ -26,28 +25,33 @@ othersY = others['AWARD']
 # Create the model
 log_clf = LogisticRegression(max_iter=2000)
 dt_clf = DecisionTreeClassifier(max_depth=1000)
-knn_clf = KNeighborsClassifier()
 svc_clf = SVC(probability=True)
 rf_clf = RandomForestClassifier(max_depth=1000)
 
+# Create the voting classifiers
 model_r = VotingClassifier(
-    estimators=[('lr', log_clf)],# ('dt', dt_clf), ('knn', knn_clf), ('svc', svc_clf), ('rf', rf_clf)],
-    voting='soft'  # 'hard' dla głosowania większościowego, 'soft' dla średniej z prawdopodobieństw
+    estimators=[('lr', log_clf)],
+    voting='soft'
 )
-
-model_r.fit(rookiesX, rookiesY)
 
 model_o = VotingClassifier(
-    estimators=[('lr', log_clf), ('dt', dt_clf), ('knn', knn_clf), ('svc', svc_clf), ('rf', rf_clf)],
-    voting='soft'  # 'hard' dla głosowania większościowego, 'soft' dla średniej z prawdopodobieństw
+    estimators=[('lr', log_clf), ('dt', dt_clf), ('svc', svc_clf), ('rf', rf_clf)],
+    voting='soft',
+    weights=[2, 5, 5, 2]
 )
 
+# Fit the models
+model_r.fit(rookiesX, rookiesY)
 model_o.fit(othersX, othersY)
 
-# Save the model
+# Save models to files
 rookies_model_filename = 'rookies_model.sav'
 joblib.dump(model_r, rookies_model_filename)
 
 others_model_filename = 'others_model.sav'
 joblib.dump(model_o, others_model_filename)
+
+# TODO remove
+import main
+main.main()
 

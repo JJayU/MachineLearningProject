@@ -2,106 +2,99 @@ import json
 from pathlib import Path
 import joblib
 import pandas
-import sklearn.svm as svm
 
-filename = "junkiert_jakub.json"
-results_file = Path(filename)
+#TODO remove
+import check_results
 
 
 def main():
+    # Define the filename for the results
+    filename = "junkiert_jakub.json"
+    results_file = Path(filename)
 
+    # Prepare the results dictionary
     results = {"first all-nba team": [], "second all-nba team": [], "third all-nba team": [],
                "first rookie all-nba team": [], "second rookie all-nba team": []}
 
     # Data processing here
-    # Note: at least 65 games have to be played in 23-24 in order to get All_NBA (at least 20 min played)
 
-    # Load the model
+    # Load the models
     rookies_model_filename = 'rookies_model.sav'
     rookies_model = joblib.load(rookies_model_filename)
 
     others_model_filename = 'others_model.sav'
     others_model = joblib.load(others_model_filename)
 
-    # Load the data
+    # Load the data and drop the columns that are not needed
     rookies = pandas.read_csv('rookies2023-24.csv')
+    rookies_names = rookies['PLAYER_NAME']
     rookies = rookies.drop(columns=['Unnamed: 0', 'PLAYER_NAME', 'NICKNAME', 'TEAM_ABBREVIATION'])
 
     others = pandas.read_csv('others2023-24.csv')
+    others_names = others['PLAYER_NAME']
     others = others.drop(columns=['Unnamed: 0', 'PLAYER_NAME', 'NICKNAME', 'TEAM_ABBREVIATION'])
 
-    result_r = rookies_model.predict(rookies)
-    result_o = others_model.predict(others)
+    # ---- Rookies ----
 
-    true_r = pandas.read_csv('rookies_w_awards2023-24.csv')
-    true_o = pandas.read_csv('others_w_awards2023-24.csv')
+    print('\nAll-Rookie:')
 
-    dobrze_r = 0
-    dobrze_o = 0
+    # Predict the probabilities of players being in the All-Rookie team
+    prob_r = rookies_model.predict_proba(rookies)
 
-    punkty = 0
-    dobre_piatki = [0, 0, 0, 0, 0]
+    # Sort the probabilities and get the top 5
+    top_five_r1 = sorted(prob_r[:, 1], reverse=True)[:5]
+    top_five_r2 = sorted(prob_r[:, 2], reverse=True)[:5]
 
-    print('Rookies:')
-    for i in range(len(result_r)):
+    # Iterate through the probabilities and print and append to results the players that are in the top 5
+    print('\nAll-Rookie Team 1:')
+    for i, val in enumerate(prob_r[:, 1]):
+        if val in top_five_r1:
+            results["first rookie all-nba team"].append(rookies_names[i])
+            print(rookies_names[i])
 
-        if result_r[i] > 0:
-            if result_r[i] == 1:
-                if len(results["first rookie all-nba team"]) < 5:
-                    results["first rookie all-nba team"].append(true_r['PLAYER_NAME'][i])
-            elif result_r[i] == 2:
-                if len(results["second rookie all-nba team"]) < 5:
-                    results["second rookie all-nba team"].append(true_r['PLAYER_NAME'][i])
+    print('\nAll-Rookie Team 2:')
+    for i, val in enumerate(prob_r[:, 2]):
+        if val in top_five_r2:
+            results["second rookie all-nba team"].append(rookies_names[i])
+            print(rookies_names[i])
 
-        if result_r[i] == true_r['AWARD'][i] and result_r[i] > 0:
-            dobrze_r += 1
-            punkty += 10
-            dobre_piatki[result_r[i] - 1] += 1
-        elif result_r[i] > 0 and true_r['AWARD'][i] > 0:
-            punkty += 8
+    # ---- Others ----
 
-    print('Dobrze: ' + str(dobrze_r) + '/10 - ' + str(dobrze_r/10 * 100) + '%')
+    print('\nAll-NBA:')
 
-    print('Others:')
-    for i in range(len(result_o)):
+    # Predict the probabilities of players being in the All-NBA team
+    prob_others = others_model.predict_proba(others)
 
-        if result_o[i] > 0:
-            if result_o[i] == 1:
-                if len(results["first all-nba team"]) < 5:
-                    results["first all-nba team"].append(true_o['PLAYER_NAME'][i])
-            elif result_o[i] == 2:
-                if len(results["second all-nba team"]) < 5:
-                    results["second all-nba team"].append(true_o['PLAYER_NAME'][i])
-            elif result_o[i] == 3:
-                if len(results["third all-nba team"]) < 5:
-                    results["third all-nba team"].append(true_o['PLAYER_NAME'][i])
+    # Sort the probabilities and get the top 5
+    top_five_nba1 = sorted(prob_others[:, 1], reverse=True)[:5]
+    top_five_nba2 = sorted(prob_others[:, 2], reverse=True)[:5]
+    top_five_nba3 = sorted(prob_others[:, 3], reverse=True)[:5]
 
-        if result_o[i] == true_o['AWARD'][i] and result_o[i] > 0:
-            dobrze_o += 1
-            punkty += 10
-            dobre_piatki[result_o[i] + 1] += 1
-        elif result_o[i] > 0 and true_o['AWARD'][i] > 0:
-            if abs(result_o[i] - true_o['AWARD'][i]) == 1:
-                punkty += 8
-            elif abs(result_o[i] - true_o['AWARD'][i]) == 2:
-                punkty += 6
+    # Iterate through the probabilities and print and append to results the players that are in the top 5
+    print('\nAll-NBA 1')
+    for i, val in enumerate(prob_others[:, 1]):
+        if val in top_five_nba1:
+            results["first all-nba team"].append(others_names[i])
+            print(others_names[i])
 
-    print('Dobrze: ' + str(dobrze_o) + '/15 - ' + str(dobrze_o/15 * 100) + '%')
+    print('\nAll-NBA 2')
+    for i, val in enumerate(prob_others[:, 2]):
+        if val in top_five_nba2:
+            results["second all-nba team"].append(others_names[i])
+            print(others_names[i])
 
-    for i in dobre_piatki:
-        if i == 2:
-            punkty += 5
-        elif i == 3:
-            punkty += 10
-        elif i == 4:
-            punkty += 20
-        elif i == 5:
-            punkty += 40
+    print('\nAll-NBA 3')
+    for i, val in enumerate(prob_others[:, 3]):
+        if val in top_five_nba3:
+            results["third all-nba team"].append(others_names[i])
+            print(others_names[i])
 
-    print('Punkty: ' + str(punkty))
+    # TODO remove
+    check_results.check_results()
 
     # End of data processing
 
+    # Save the results to a json file
     with results_file.open('w') as output_file:
         json.dump(results, output_file, indent=4)
 
