@@ -2,13 +2,13 @@ import pandas
 import joblib
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
-from sklearn.ensemble import VotingClassifier, GradientBoostingClassifier
+from sklearn.ensemble import VotingClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 
 # Load the data
-rookies = pandas.read_csv('rookies_all.csv')
-others = pandas.read_csv('others_all.csv')
+rookies = pandas.read_csv('csv/rookies_all.csv')
+others = pandas.read_csv('csv/others_all.csv')
 
 # Drop the columns that are not needed
 rookies = rookies.drop(columns=['Unnamed: 0', 'Unnamed: 0.2', 'Unnamed: 0.1', 'PLAYER_NAME', 'NICKNAME', 'TEAM_ABBREVIATION'])
@@ -51,7 +51,7 @@ joblib.dump(model_r, rookies_model_filename)
 others_model_filename = 'others_model.sav'
 joblib.dump(model_o, others_model_filename)
 
-# TODO remove
-import main
-main.main()
+# Uncomment the following lines to run the main script after training the models
+# import predict
+# predict.main()
 

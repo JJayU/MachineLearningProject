@@ -3,9 +3,6 @@ from pathlib import Path
 import joblib
 import pandas
 
-#TODO remove
-import check_results
-
 
 def main():
     # Define the filename for the results
@@ -26,11 +23,11 @@ def main():
     others_model = joblib.load(others_model_filename)
 
     # Load the data and drop the columns that are not needed
-    rookies = pandas.read_csv('rookies2023-24.csv')
+    rookies = pandas.read_csv('csv/rookies2023-24.csv')
     rookies_names = rookies['PLAYER_NAME']
     rookies = rookies.drop(columns=['Unnamed: 0', 'PLAYER_NAME', 'NICKNAME', 'TEAM_ABBREVIATION'])
 
-    others = pandas.read_csv('others2023-24.csv')
+    others = pandas.read_csv('csv/others2023-24.csv')
     others_names = others['PLAYER_NAME']
     others = others.drop(columns=['Unnamed: 0', 'PLAYER_NAME', 'NICKNAME', 'TEAM_ABBREVIATION'])
 
@@ -89,8 +86,9 @@ def main():
             results["third all-nba team"].append(others_names[i])
             print(others_names[i])
 
-    # TODO remove
-    check_results.check_results()
+    # Uncomment the following lines to check the results
+    # import check_results
+    # check_results.check_results()
 
     # End of data processing
 
