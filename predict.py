@@ -2,12 +2,12 @@ import json
 from pathlib import Path
 import joblib
 import pandas
+import sys
 
 
 def main():
-    # Define the filename for the results
-    filename = "junkiert_jakub.json"
-    results_file = Path(filename)
+    # Read the argument containing the filename for the results
+    results_file = Path(sys.argv[1])
 
     # Prepare the results dictionary
     results = {"first all-nba team": [], "second all-nba team": [], "third all-nba team": [],
