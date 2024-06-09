@@ -4,6 +4,9 @@ import joblib
 import pandas
 import sys
 
+# This script is used to predict the All-NBA and All-Rookie teams for the 2023-24 season.
+# It usus the models trained in train_model.py to predict the probabilities of players being in the teams.
+# Copyright: Jakub Junkiert 2024
 
 def main():
     # Read the argument containing the filename for the results
@@ -16,10 +19,10 @@ def main():
     # Data processing here
 
     # Load the models
-    rookies_model_filename = 'rookies_model.sav'
+    rookies_model_filename = 'models/rookies_model.sav'
     rookies_model = joblib.load(rookies_model_filename)
 
-    others_model_filename = 'others_model.sav'
+    others_model_filename = 'models/others_model.sav'
     others_model = joblib.load(others_model_filename)
 
     # Load the data and drop the columns that are not needed

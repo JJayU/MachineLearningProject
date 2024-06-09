@@ -6,6 +6,9 @@ from sklearn.ensemble import VotingClassifier
 from sklearn.svm import SVC
 from sklearn.ensemble import RandomForestClassifier
 
+# This script is used to train the model. It loads the data, creates the model, fits it and saves it to a file.
+# Copyright: Jakub Junkiert 2024
+
 # Load the data
 rookies = pandas.read_csv('csv/rookies_all.csv')
 others = pandas.read_csv('csv/others_all.csv')
@@ -45,10 +48,10 @@ model_r.fit(rookiesX, rookiesY)
 model_o.fit(othersX, othersY)
 
 # Save models to files
-rookies_model_filename = 'rookies_model.sav'
+rookies_model_filename = 'models/rookies_model.sav'
 joblib.dump(model_r, rookies_model_filename)
 
-others_model_filename = 'others_model.sav'
+others_model_filename = 'models/others_model.sav'
 joblib.dump(model_o, others_model_filename)
 
 # Uncomment the following lines to run the main script after training the models

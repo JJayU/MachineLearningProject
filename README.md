@@ -50,16 +50,17 @@ model_o = VotingClassifier(
 )
 ```
 After fitting both models (it can take a while), they are saved to files using *joblib* library and they are ready to start predicting awards.
+
 ```python
 # Fit the models
 model_r.fit(rookiesX, rookiesY)
 model_o.fit(othersX, othersY)
 
 # Save models to files
-rookies_model_filename = 'rookies_model.sav'
+rookies_model_filename = 'models/rookies_model.sav'
 joblib.dump(model_r, rookies_model_filename)
 
-others_model_filename = 'others_model.sav'
+others_model_filename = 'models/others_model.sav'
 joblib.dump(model_o, others_model_filename)
 ```
 
@@ -89,7 +90,7 @@ After this, selected players names are added to output *json* file.
 - *train_model.py* - script used to train prediction models,
 - *predict.py* - script used to predict awards,
 - *analyze_data.py* - script used to generate ProfileReport of gathered data, used for development only,
-- *rookies_model.sav*, *others_model.sav* - Scikit-Learn models created and used for prediction,
+- *models/rookies_model.sav*, *models/others_model.sav* - Scikit-Learn models created and used for prediction,
 - *junkiert_jakub.json* - results of running the prediction script,
 - *requirements.txt* - file with list of libraries needed to run this project,
 - *csv* - folder containing all generated csv files

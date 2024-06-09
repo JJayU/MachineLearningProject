@@ -8,7 +8,6 @@ import pandas
 # This script is used to gather data for training the model. It downloads player stats for all seasons,
 # then downloads player awards for each player and each season. It then merges all seasons into one file.
 # Tip: run steps 1-3 separately, as the script may crash due to timeout.
-
 # Copyright: Jakub Junkiert 2024
 
 
@@ -38,8 +37,8 @@ for i in seasons:
 
     others = pandas.concat([sophomores, veterans])
 
-    rookies.to_csv('rookies' + i + '.csv')
-    others.to_csv('others' + i + '.csv')
+    rookies.to_csv('csv/rookies' + i + '.csv')
+    others.to_csv('csv/others' + i + '.csv')
 
 # --------------------------------------------------------------------------------------------
 
@@ -95,8 +94,8 @@ def find_award_r(row):
 for i in seasons:
     print('Starting season ' + i)
 
-    rookies = pandas.read_csv('rookies' + i + '.csv')
-    others = pandas.read_csv('others' + i + '.csv')
+    rookies = pandas.read_csv('csv/rookies' + i + '.csv')
+    others = pandas.read_csv('csv/others' + i + '.csv')
 
     rookies['AWARD'] = 0
     rookies['SEASON'] = i
@@ -107,8 +106,8 @@ for i in seasons:
     rookies = rookies.apply(find_award_r, axis=1)
     others = others.apply(find_award_o, axis=1)
 
-    rookies.to_csv('rookies_w_awards' + i + '.csv')
-    others.to_csv('others_w_awards' + i + '.csv')
+    rookies.to_csv('csv/rookies_w_awards' + i + '.csv')
+    others.to_csv('csv/others_w_awards' + i + '.csv')
 
 # --------------------------------------------------------------------------------------------
 
@@ -120,10 +119,10 @@ rookies = pandas.DataFrame()
 others = pandas.DataFrame()
 
 for i in seasons:
-    rookies = pandas.concat([rookies, pandas.read_csv('rookies_w_awards' + i + '.csv')])
-    others = pandas.concat([others, pandas.read_csv('others_w_awards' + i + '.csv')])
+    rookies = pandas.concat([rookies, pandas.read_csv('csv/rookies_w_awards' + i + '.csv')])
+    others = pandas.concat([others, pandas.read_csv('csv/others_w_awards' + i + '.csv')])
 
-rookies.to_csv('rookies_all.csv')
-others.to_csv('others_all.csv')
+rookies.to_csv('csv/rookies_all.csv')
+others.to_csv('csv/others_all.csv')
 
 # --------------------------------------------------------------------------------------------
